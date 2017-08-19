@@ -45,7 +45,6 @@ public class UserServiceTest {
     public void notRegister() throws Exception {
 
         User mockUser = mock(User.class);
-        when(mockUser.getUsername()).thenReturn("newUser");
 
         when(userRepository.findByUsername("newUser")).thenReturn(mockUser);
 
@@ -57,7 +56,6 @@ public class UserServiceTest {
     public void delete() throws Exception {
 
         User mockUser = mock(User.class);
-        when(mockUser.getUsername()).thenReturn("newUser");
 
         when(userRepository.findByUsername("newUser")).thenReturn(mockUser);
 
