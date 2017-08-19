@@ -1,10 +1,9 @@
 package example.moviedb.controller;
 
+import example.moviedb.dto.RegisterUserDto;
 import example.moviedb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
@@ -14,13 +13,13 @@ public class UserController {
 
 
     @PostMapping(value = "/register")
-    public void register(String username, String password) throws Exception {
+    public void register(@RequestBody RegisterUserDto registerUserDto) throws Exception {
 
-        userService.register(username, password);
+        userService.register(registerUserDto.getUsername(), registerUserDto.getPassword());
     }
 
     @PostMapping(value = "/delete")
-    public void delete(String username) throws Exception {
+    public void delete(@PathVariable String username) throws Exception {
 
         userService.delete(username);
     }
