@@ -1,20 +1,21 @@
 package example.moviedb.model;
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
+@Table(name = "users")
 @Data
-@SequenceGenerator(name = "user_seq", sequenceName = "user_seq", initialValue = 1)
 public class User {
 
     @Id
-    @GeneratedValue(generator = "user_seq")
-    private Long id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
     private String username;
     private String password;
