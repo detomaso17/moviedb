@@ -13,8 +13,12 @@ import java.util.Collections;
 @Service
 public class MovieDBUserDetailsService implements UserDetailsService {
 
-    @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    public MovieDBUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

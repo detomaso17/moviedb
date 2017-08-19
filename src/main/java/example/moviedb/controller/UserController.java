@@ -8,9 +8,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class UserController {
 
-    @Autowired
     private UserService userService;
 
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping(value = "/register")
     public void register(@RequestBody RegisterUserDto registerUserDto) throws Exception {
