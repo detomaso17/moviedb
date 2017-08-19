@@ -3,6 +3,7 @@ package example.moviedb.service;
 import example.moviedb.model.User;
 import example.moviedb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -11,11 +12,13 @@ import java.util.UUID;
 public class UserService {
 
     private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
 
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public void register(String username, String password) throws Exception {
@@ -24,7 +27,7 @@ public class UserService {
         if (user != null) {
             throw new Exception("There is already a user with username: " + username);
         }
-        User newUser = new User(username, password, true);
+        User newUser = new User(username, passwordEncoder.encode(password), true);
         userRepository.save(newUser);
 
     }

@@ -9,9 +9,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -22,19 +24,22 @@ public class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     private UserService userService;
 
     @Before
     public void setUp() throws Exception {
 
-        userService = new UserService(userRepository);
+        userService = new UserService(userRepository, passwordEncoder);
     }
 
     @Test
     public void register() throws Exception {
 
         when(userRepository.findByUsername(any(String.class))).thenReturn(null);
-
+        when(passwordEncoder.encode(any(String.class))).thenReturn(anyString());
         userService.register("newUser", "newPassword");
 
         verify(userRepository).findByUsername("newUser");
