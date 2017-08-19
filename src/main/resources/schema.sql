@@ -1,7 +1,9 @@
-create table user(
-    id int not null,
-    username varchar(25) not null,
-    password varchar(80) not null,
-    enabled boolean not null,
-    primary key(id)
+use moviedb;
+
+drop table if exists users;
+create table users (
+    id binary(16) primary key,
+    username varchar(60) not null,
+    password varchar(60) not null,
+    enabled boolean
 );

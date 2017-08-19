@@ -1,2 +1,4 @@
-insert into user
-values (1, 'admin', '$2y$10$FrceO8ruexezilEQNF9R7OlWEnQo97cei68IJ/H9gBhEnVZzrA2mu', true);
+use moviedb;
+
+insert into users
+values (3748294839205746, 'admin', '$2a$10$X70UGdCKbcaHB.SX0yO.6.mrLkkpRQ9dEHI6TAivBUDExtFN8nn1i', true);
