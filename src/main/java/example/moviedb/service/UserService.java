@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
 public class UserService {
 
@@ -27,7 +25,7 @@ public class UserService {
         if (user != null) {
             throw new Exception("There is already a user with username: " + username);
         }
-        User newUser = new User(username, passwordEncoder.encode(password), true);
+        User newUser = new User(username, passwordEncoder.encode(password));
         userRepository.save(newUser);
 
     }
