@@ -9,6 +9,9 @@ import java.util.UUID;
 
 public interface MovieRepository extends JpaRepository<Movie, UUID> {
 
+    @Query("select m from Movie m where m.id = ?1")
+    public Movie findMovieById(UUID id);
+
     public List<Movie> findAllMoviesByUser_Username(String username);
 
     @Query("select m from Movie m where m.user.username = ?1 and m.watched = ?2")
