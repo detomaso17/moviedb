@@ -20,14 +20,12 @@ public class MovieService {
 
     public List<Movie> getAllMovies(String username) {
 
-        //TODO implement
-        return null;
+        return movieRepository.findAllMoviesByUser_Username(username);
     }
 
     public List<Movie> getMoviesByWatched(String username, Boolean watched) {
 
-        //TODO implement
-        return null;
+        return movieRepository.findMoviesByWatched(username, watched);
     }
 
     public UUID addMovie(String username,
