@@ -2,6 +2,7 @@ package example.moviedb.service;
 
 import example.moviedb.model.Movie;
 import example.moviedb.repository.MovieRepository;
+import example.moviedb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +13,12 @@ import java.util.UUID;
 public class MovieService {
 
     private MovieRepository movieRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public MovieService(MovieRepository movieRepository) {
+    public MovieService(MovieRepository movieRepository, UserRepository userRepository) {
         this.movieRepository = movieRepository;
+        this.userRepository = userRepository;
     }
 
     public List<Movie> getAllMovies(String username) {

@@ -1,7 +1,9 @@
 package example.moviedb.service;
 
 import example.moviedb.model.Movie;
+import example.moviedb.model.User;
 import example.moviedb.repository.MovieRepository;
+import example.moviedb.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,19 +35,23 @@ public class MovieServiceTest {
     @Mock
     private MovieRepository movieRepository;
 
+    @Mock
+    private UserRepository userRepository;
+
 
     private MovieService movieService;
 
     @Before
     public void setUp() throws Exception {
 
-        movieService = new MovieService(movieRepository);
+        movieService = new MovieService(movieRepository, userRepository);
     }
 
     @Test
     public void shouldAddMovie() throws Exception {
 
         when(movieRepository.save(any(Movie.class))).thenReturn(mock(Movie.class));
+        when(userRepository.findByUsername(USERNAME)).thenReturn(mock(User.class));
         UUID movieUuid = movieService.addMovie(USERNAME,
                 MOVIE_TITLE,
                 MOVIE_NEW_DESCRIPTION,
@@ -53,6 +59,7 @@ public class MovieServiceTest {
 
         assertNotNull(movieUuid);
         verify(movieRepository).save(any(Movie.class));
+        verify(userRepository).findByUsername(USERNAME);
 
     }
 
