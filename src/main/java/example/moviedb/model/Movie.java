@@ -1,6 +1,7 @@
 package example.moviedb.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -12,6 +13,7 @@ import java.util.UUID;
 @Table(name = "movies")
 @Data
 @RequiredArgsConstructor
+@NoArgsConstructor
 public class Movie {
 
     @Id
