@@ -82,9 +82,17 @@ public class MovieService {
     }
 
     public Boolean deleteMovie(String username,
-                               String id) {
+                               String id) throws Exception {
 
-        //TODO implement
-        return false;
+        UUID uuid = UUID.fromString(id);
+        Movie movie = movieRepository.findMovieById(uuid);
+        if (movie == null) {
+            throw new Exception("no movie with uuid: " + id);
+        }
+        if (!movie.getUser().getUsername().equals(username)) {
+            throw new Exception("movie with given uuid is not associated with user: " + username);
+        }
+        movieRepository.delete(movie);
+        return true;
     }
 }
