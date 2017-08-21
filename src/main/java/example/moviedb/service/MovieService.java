@@ -57,10 +57,28 @@ public class MovieService {
                              String id,
                              String title,
                              String description,
-                             Boolean watched) {
+                             Boolean watched) throws Exception {
 
-        //TODO implement
-        return false;
+        UUID uuid = UUID.fromString(id);
+        Movie editedMovie = movieRepository.findMovieById(uuid);
+        if (editedMovie == null) {
+            throw new Exception("no movie with uuid: " + id);
+        }
+        if (!editedMovie.getUser().getUsername().equals(username)) {
+            throw new Exception("movie with given uuid is not associated with user: " + username);
+        }
+        if (title != null) {
+            editedMovie.setTitle(title);
+        }
+        if (description != null) {
+            editedMovie.setDescription(description);
+        }
+        if (watched != null) {
+            editedMovie.setWatched(watched);
+        }
+
+        Movie savedMovie = movieRepository.save(editedMovie);
+        return (savedMovie != null && savedMovie.getId().equals(uuid));
     }
 
     public Boolean deleteMovie(String username,

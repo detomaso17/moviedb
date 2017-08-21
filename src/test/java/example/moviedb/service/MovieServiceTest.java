@@ -72,8 +72,15 @@ public class MovieServiceTest {
     @Test
     public void shouldEditMovie() throws Exception {
 
-        Movie editedMovie = new Movie(MOVIE_TITLE, true);
+        User mockUser = mock(User.class);
+        when(mockUser.getUsername()).thenReturn(USERNAME);
+
+        Movie editedMovie = new Movie();
+        editedMovie.setId(MOVIE_UUID);
+        editedMovie.setTitle(MOVIE_TITLE);
         editedMovie.setDescription(MOVIE_PREVIOUS_DESCRIPTION);
+        editedMovie.setWatched(true);
+        editedMovie.setUser(mockUser);
 
         when(movieRepository.findMovieById(MOVIE_UUID)).thenReturn(editedMovie);
         when(movieRepository.save(editedMovie)).thenReturn(editedMovie);
