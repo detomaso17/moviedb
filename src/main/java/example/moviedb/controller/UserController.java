@@ -5,6 +5,8 @@ import example.moviedb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 public class UserController {
 
@@ -21,9 +23,12 @@ public class UserController {
         userService.register(registerUserDto.getUsername(), registerUserDto.getPassword());
     }
 
-    @PostMapping(value = "/delete")
-    public void delete(@PathVariable String username) throws Exception {
+    @DeleteMapping(value = "/delete/{username}")
+    public void delete(@PathVariable String username, Principal authenticationUser) throws Exception {
 
+        if (!authenticationUser.getName().equals(username)) {
+            throw new Exception("The user cannot delete account for another user");
+        }
         userService.delete(username);
     }
 }
