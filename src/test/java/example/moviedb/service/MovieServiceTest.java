@@ -24,10 +24,10 @@ public class MovieServiceTest {
 
     private final static String USERNAME = "newUser";
 
-    private final static String MOVIE_UUID_TEXT = "12354568-4367-7899-1234-789445611234";
-    private final static UUID MOVIE_UUID = UUID.fromString(MOVIE_UUID_TEXT);
+    private final static String MOVIE_ID = "12354568-4367-7899-1234-789445611234";
+    private final static UUID MOVIE_UUID = UUID.fromString(MOVIE_ID);
 
-    private final static String MOVIE_WRONG_UUID = "12354568-4367-7899-1234-789445611235";
+    private final static String MOVIE_WRONG_ID = "12354568-4367-7899-1234-789445611235";
     private final static String MOVIE_TITLE = "newMovie";
     private final static String MOVIE_PREVIOUS_DESCRIPTION = "previous description";
     private final static String MOVIE_NEW_DESCRIPTION = "new description";
@@ -86,7 +86,7 @@ public class MovieServiceTest {
         when(movieRepository.save(editedMovie)).thenReturn(editedMovie);
 
         Boolean isEdited = movieService.editMovie(USERNAME,
-                MOVIE_UUID_TEXT,
+                MOVIE_ID,
                 MOVIE_TITLE,
                 MOVIE_NEW_DESCRIPTION,
                 false);
@@ -102,15 +102,8 @@ public class MovieServiceTest {
     @Test(expected = Exception.class)
     public void shouldNotEditMovieDueToWrongId() throws Exception {
 
-        Movie editedMovie = new Movie(MOVIE_TITLE, true);
-        editedMovie.setDescription(MOVIE_PREVIOUS_DESCRIPTION);
-
-        when(movieRepository.findMovieById(MOVIE_UUID)).thenReturn(editedMovie);
-        when(movieRepository.save(editedMovie)).thenReturn(editedMovie);
-        when(movieRepository.save(any(Movie.class))).thenReturn(mock(Movie.class));
-
         movieService.editMovie(USERNAME,
-                MOVIE_WRONG_UUID,
+                MOVIE_WRONG_ID,
                 MOVIE_TITLE,
                 MOVIE_NEW_DESCRIPTION,
                 false);
@@ -119,11 +112,15 @@ public class MovieServiceTest {
     @Test
     public void shouldDeleteMovie() throws Exception {
 
+        User mockUser = mock(User.class);
+        when(mockUser.getUsername()).thenReturn(USERNAME);
+
         Movie mockMovie = mock(Movie.class);
+        when(mockMovie.getUser()).thenReturn(mockUser);
 
         when(movieRepository.findMovieById(MOVIE_UUID)).thenReturn(mockMovie);
 
-        Boolean isDeleted = movieService.deleteMovie(USERNAME, MOVIE_UUID_TEXT);
+        Boolean isDeleted = movieService.deleteMovie(USERNAME, MOVIE_ID);
 
         assertTrue(isDeleted);
         verify(movieRepository).delete(mockMovie);
@@ -132,11 +129,7 @@ public class MovieServiceTest {
     @Test(expected = Exception.class)
     public void shouldNotDeleteMovieDueToWrongId() throws Exception {
 
-        Movie mockMovie = mock(Movie.class);
-
-        when(movieRepository.findMovieById(MOVIE_UUID)).thenReturn(mockMovie);
-
-        movieService.deleteMovie(USERNAME, MOVIE_WRONG_UUID);
+        movieService.deleteMovie(USERNAME, MOVIE_WRONG_ID);
     }
 
     @Test
@@ -156,10 +149,8 @@ public class MovieServiceTest {
     public void shouldListAllWatchedMovies() throws Exception {
 
         List<Movie> mockWatchedMovies = prepareMockMovies();
-        List<Movie> mockNotWatchedMovies = prepareMockMovies();
 
         when(movieRepository.findMoviesByWatched(USERNAME, true)).thenReturn(mockWatchedMovies);
-        when(movieRepository.findMoviesByWatched(USERNAME, false)).thenReturn(mockNotWatchedMovies);
 
         List<Movie> watchedMovies = movieService.getMoviesByWatched(USERNAME, true);
 
@@ -171,10 +162,8 @@ public class MovieServiceTest {
     @Test
     public void shouldListAllNotWatchedMovies() throws Exception {
 
-        List<Movie> mockWatchedMovies = prepareMockMovies();
         List<Movie> mockNotWatchedMovies = prepareMockMovies();
 
-        when(movieRepository.findMoviesByWatched(USERNAME, true)).thenReturn(mockWatchedMovies);
         when(movieRepository.findMoviesByWatched(USERNAME, false)).thenReturn(mockNotWatchedMovies);
 
         List<Movie> unwatchedMovies = movieService.getMoviesByWatched(USERNAME, false);
@@ -183,7 +172,6 @@ public class MovieServiceTest {
         verify(movieRepository).findMoviesByWatched(USERNAME, false);
         verify(movieRepository, new Times(0)).findMoviesByWatched(USERNAME, true);
     }
-
 
     private List<Movie> prepareMockMovies() {
 
