@@ -24,8 +24,10 @@ public class MovieServiceTest {
 
     private final static String USERNAME = "newUser";
 
-    private final static String MOVIE_ID = "4322432876490356";
-    private final static String MOVIE_WRONG_ID = "4322432876490351";
+    private final static String MOVIE_UUID_TEXT = "12354568-4367-7899-1234-789445611234";
+    private final static UUID MOVIE_UUID = UUID.fromString(MOVIE_UUID_TEXT);
+
+    private final static String MOVIE_WRONG_UUID = "12354568-4367-7899-1234-789445611235";
     private final static String MOVIE_TITLE = "newMovie";
     private final static String MOVIE_PREVIOUS_DESCRIPTION = "previous description";
     private final static String MOVIE_NEW_DESCRIPTION = "new description";
@@ -50,17 +52,21 @@ public class MovieServiceTest {
     @Test
     public void shouldAddMovie() throws Exception {
 
-        when(movieRepository.save(any(Movie.class))).thenReturn(mock(Movie.class));
+
+        Movie savedMockMovie = mock(Movie.class);
+        when(savedMockMovie.getId()).thenReturn(MOVIE_UUID);
+
+        when(movieRepository.save(any(Movie.class))).thenReturn(savedMockMovie);
         when(userRepository.findByUsername(USERNAME)).thenReturn(mock(User.class));
-        UUID movieUuid = movieService.addMovie(USERNAME,
+        UUID newUuid = movieService.addMovie(USERNAME,
                 MOVIE_TITLE,
                 MOVIE_NEW_DESCRIPTION,
                 true);
 
-        assertNotNull(movieUuid);
+        assertNotNull(newUuid);
+        assertEquals(MOVIE_UUID, newUuid);
         verify(movieRepository).save(any(Movie.class));
         verify(userRepository).findByUsername(USERNAME);
-
     }
 
     @Test
@@ -69,11 +75,11 @@ public class MovieServiceTest {
         Movie editedMovie = new Movie(MOVIE_TITLE, true);
         editedMovie.setDescription(MOVIE_PREVIOUS_DESCRIPTION);
 
-        when(movieRepository.findMovieById(UUID.fromString(MOVIE_ID))).thenReturn(editedMovie);
+        when(movieRepository.findMovieById(MOVIE_UUID)).thenReturn(editedMovie);
         when(movieRepository.save(editedMovie)).thenReturn(editedMovie);
 
         Boolean isEdited = movieService.editMovie(USERNAME,
-                MOVIE_ID,
+                MOVIE_UUID_TEXT,
                 MOVIE_TITLE,
                 MOVIE_NEW_DESCRIPTION,
                 false);
@@ -92,13 +98,12 @@ public class MovieServiceTest {
         Movie editedMovie = new Movie(MOVIE_TITLE, true);
         editedMovie.setDescription(MOVIE_PREVIOUS_DESCRIPTION);
 
-        when(movieRepository.findMovieById(UUID.fromString(MOVIE_ID))).thenReturn(editedMovie);
+        when(movieRepository.findMovieById(MOVIE_UUID)).thenReturn(editedMovie);
         when(movieRepository.save(editedMovie)).thenReturn(editedMovie);
-
-        when(movieRepository.save(any(Movie.class))).thenReturn(any(Movie.class));
+        when(movieRepository.save(any(Movie.class))).thenReturn(mock(Movie.class));
 
         movieService.editMovie(USERNAME,
-                MOVIE_WRONG_ID,
+                MOVIE_WRONG_UUID,
                 MOVIE_TITLE,
                 MOVIE_NEW_DESCRIPTION,
                 false);
@@ -109,9 +114,9 @@ public class MovieServiceTest {
 
         Movie mockMovie = mock(Movie.class);
 
-        when(movieRepository.findMovieById(UUID.fromString(MOVIE_ID))).thenReturn(mockMovie);
+        when(movieRepository.findMovieById(MOVIE_UUID)).thenReturn(mockMovie);
 
-        Boolean isDeleted = movieService.deleteMovie(USERNAME, MOVIE_ID);
+        Boolean isDeleted = movieService.deleteMovie(USERNAME, MOVIE_UUID_TEXT);
 
         assertTrue(isDeleted);
         verify(movieRepository).delete(mockMovie);
@@ -122,9 +127,9 @@ public class MovieServiceTest {
 
         Movie mockMovie = mock(Movie.class);
 
-        when(movieRepository.findMovieById(UUID.fromString(MOVIE_ID))).thenReturn(mockMovie);
+        when(movieRepository.findMovieById(MOVIE_UUID)).thenReturn(mockMovie);
 
-        movieService.deleteMovie(USERNAME, MOVIE_WRONG_ID);
+        movieService.deleteMovie(USERNAME, MOVIE_WRONG_UUID);
     }
 
     @Test
