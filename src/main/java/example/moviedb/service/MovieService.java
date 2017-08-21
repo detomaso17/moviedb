@@ -1,6 +1,7 @@
 package example.moviedb.service;
 
 import example.moviedb.model.Movie;
+import example.moviedb.model.User;
 import example.moviedb.repository.MovieRepository;
 import example.moviedb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +35,22 @@ public class MovieService {
     public UUID addMovie(String username,
                          String title,
                          String description,
-                         Boolean watched) {
+                         Boolean watched) throws Exception {
 
-        //TODO implement
-        return null;
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new Exception("no user with username: " + username + " found");
+        }
+
+        Movie movie = new Movie();
+        movie.setTitle(title);
+        movie.setDescription(description);
+        movie.setWatched(watched);
+        movie.setUser(user);
+
+        Movie savedMovie = movieRepository.save(movie);
+
+        return savedMovie.getId();
     }
 
     public Boolean editMovie(String username,
