@@ -17,4 +17,5 @@ public interface MovieRepository extends JpaRepository<Movie, UUID> {
     @Query("select m from Movie m where m.user.username = ?1 and m.watched = ?2")
     public List<Movie> findMoviesByWatched(String username, Boolean watched);
 
+    public void deleteByUser_Username(String username);
 }

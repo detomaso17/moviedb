@@ -1,28 +1,31 @@
 package example.moviedb.service;
 
 import example.moviedb.model.User;
+import example.moviedb.repository.MovieRepository;
 import example.moviedb.repository.UserRepository;
-import jdk.nashorn.internal.runtime.ECMAException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
 
+    private static final String USERNAME = "newUser";
+    private static final String PASSWORD = "newPassword";
+
+
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private MovieRepository movieRepository;
 
     @Mock
     private PasswordEncoder passwordEncoder;
@@ -32,7 +35,7 @@ public class UserServiceTest {
     @Before
     public void setUp() throws Exception {
 
-        userService = new UserService(userRepository, passwordEncoder);
+        userService = new UserService(userRepository, movieRepository, passwordEncoder);
     }
 
     @Test
@@ -40,10 +43,9 @@ public class UserServiceTest {
 
         when(userRepository.findByUsername(any(String.class))).thenReturn(null);
         when(passwordEncoder.encode(any(String.class))).thenReturn(anyString());
-        userService.register("newUser", "newPassword");
+        userService.register(USERNAME, PASSWORD);
 
-        verify(userRepository).findByUsername("newUser");
-
+        verify(userRepository).findByUsername(USERNAME);
     }
 
     @Test(expected = Exception.class)
@@ -51,10 +53,9 @@ public class UserServiceTest {
 
         User mockUser = mock(User.class);
 
-        when(userRepository.findByUsername("newUser")).thenReturn(mockUser);
+        when(userRepository.findByUsername(USERNAME)).thenReturn(mockUser);
 
-        userService.register("newUser", "newPassword");
-
+        userService.register(USERNAME, PASSWORD);
     }
 
     @Test
@@ -62,12 +63,13 @@ public class UserServiceTest {
 
         User mockUser = mock(User.class);
 
-        when(userRepository.findByUsername("newUser")).thenReturn(mockUser);
+        when(userRepository.findByUsername(USERNAME)).thenReturn(mockUser);
 
-        userService.delete("newUser");
+        userService.delete(USERNAME);
 
-        verify(userRepository).findByUsername("newUser");
+        verify(userRepository).findByUsername(USERNAME);
         verify(userRepository).delete(mockUser);
+        verify(movieRepository).deleteByUser_Username(USERNAME);
     }
 
     @Test(expected = Exception.class)
@@ -75,7 +77,7 @@ public class UserServiceTest {
 
         when(userRepository.findByUsername(any(String.class))).thenReturn(null);
 
-        userService.delete("newUser");
+        userService.delete(USERNAME);
 
     }
 
