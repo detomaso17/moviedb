@@ -32,10 +32,10 @@ public class MovieService {
         return movieRepository.findMoviesByWatched(username, watched);
     }
 
-    public UUID addMovie(String username,
-                         String title,
-                         String description,
-                         Boolean watched) throws Exception {
+    public String addMovie(String username,
+                           String title,
+                           String description,
+                           Boolean watched) throws Exception {
 
         User user = userRepository.findByUsername(username);
         if (user == null) {
@@ -50,7 +50,7 @@ public class MovieService {
 
         Movie savedMovie = movieRepository.save(movie);
 
-        return savedMovie.getId();
+        return savedMovie.getId().toString();
     }
 
     public Boolean editMovie(String username,

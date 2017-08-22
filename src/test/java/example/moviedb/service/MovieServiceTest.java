@@ -58,13 +58,13 @@ public class MovieServiceTest {
 
         when(movieRepository.save(any(Movie.class))).thenReturn(savedMockMovie);
         when(userRepository.findByUsername(USERNAME)).thenReturn(mock(User.class));
-        UUID newUuid = movieService.addMovie(USERNAME,
+        String newUuid = movieService.addMovie(USERNAME,
                 MOVIE_TITLE,
                 MOVIE_NEW_DESCRIPTION,
                 true);
 
         assertNotNull(newUuid);
-        assertEquals(MOVIE_UUID, newUuid);
+        assertEquals(MOVIE_ID, newUuid);
         verify(movieRepository).save(any(Movie.class));
         verify(userRepository).findByUsername(USERNAME);
     }

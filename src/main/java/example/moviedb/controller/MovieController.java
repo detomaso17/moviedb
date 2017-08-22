@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -43,7 +42,7 @@ public class MovieController {
     }
 
     @PostMapping(value = "/movies")
-    public UUID addMovie(@RequestBody AddMovieDto addMovieDto, Principal currentUser) throws Exception {
+    public String addMovie(@RequestBody AddMovieDto addMovieDto, Principal currentUser) throws Exception {
 
         return movieService.addMovie(
                 currentUser.getName(),
