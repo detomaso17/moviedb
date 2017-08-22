@@ -1,7 +1,6 @@
 package example.moviedb.controller;
 
 import example.moviedb.dto.AddMovieDto;
-import example.moviedb.dto.DeleteMovieDto;
 import example.moviedb.dto.EditMovieDto;
 import example.moviedb.dto.MovieDto;
 import example.moviedb.model.Movie;
@@ -24,7 +23,7 @@ public class MovieController {
         this.movieService = movieService;
     }
 
-    @GetMapping(value = "/movie")
+    @GetMapping(value = "/movies")
     public List<MovieDto> getAllMovies(Principal currentUser) throws Exception {
 
         List<Movie> movies = movieService.getAllMovies(
@@ -33,7 +32,7 @@ public class MovieController {
         return convertToDtos(movies);
     }
 
-    @GetMapping(value = "/movie/{watched}")
+    @GetMapping(value = "/movies/watched/{watched}")
     public List<MovieDto> getAllMovies(@PathVariable Boolean watched, Principal currentUser) throws Exception {
 
         List<Movie> movies = movieService.getMoviesByWatched(
@@ -43,7 +42,7 @@ public class MovieController {
         return convertToDtos(movies);
     }
 
-    @PostMapping(value = "/movie/add")
+    @PostMapping(value = "/movies")
     public UUID addMovie(@RequestBody AddMovieDto addMovieDto, Principal currentUser) throws Exception {
 
         return movieService.addMovie(
@@ -54,24 +53,24 @@ public class MovieController {
         );
     }
 
-    @PutMapping(value = "/movie/edit")
-    public Boolean editMovie(@RequestBody EditMovieDto editMovieDto, Principal currentUser) throws Exception {
+    @PutMapping(value = "/movies/{movieId}")
+    public Boolean editMovie(@PathVariable String movieId, @RequestBody EditMovieDto editMovieDto, Principal currentUser) throws Exception {
 
         return movieService.editMovie(
                 currentUser.getName(),
-                editMovieDto.getId(),
+                movieId,
                 editMovieDto.getTitle(),
                 editMovieDto.getDescription(),
                 editMovieDto.getWatched()
         );
     }
 
-    @DeleteMapping(value = "/movie/delete")
-    public Boolean deleteMovie(@RequestBody DeleteMovieDto deleteMovieDto, Principal currentUser) throws Exception {
+    @DeleteMapping(value = "/movies/{movieId}")
+    public Boolean deleteMovie(@PathVariable String movieId, Principal currentUser) throws Exception {
 
         return movieService.deleteMovie(
                 currentUser.getName(),
-                deleteMovieDto.getId()
+                movieId
         );
     }
 
